@@ -7,7 +7,83 @@
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
 <script>
+// canvas on the web is like paint, you get a block of pixels and draw on it
+const canvas = document.querySelector('#draw');
+// 2d, grab the context first. sometimes can be 3d
+const ctx = canvas.getContext('2d');
+// size up the canvas to get the exact width of the window
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// base settings
+// when you draw on something, there needs to be a colour
+ctx.strokeStyle = '#BADA55';
+// end of the line should be squared off
+ctx.lineJoin = 'round';
+ctx.lineCap = 'round';
+ctx.lineWidth = 100;
+// ctx.globalCompositeOperation = 'multiply'; //blends when you draw over it
+// ctx.globalCompositeOperation = 'destination-out'; //blends when you draw over it
+ctx.globalCompositeOperation = 'overlay';
+
+// dummy variables
+
+// when you click down on the cavas and let go, nothing happens UNLESS the cursor is down. when you click down its set to true
+let isDrawing = false;
+//where you start the line
+let lastX = 0;
+let lastY = 0;
+let hue = 0;
+let direction = true;
+
+function draw(e) { 
+  
+  if(!isDrawing) return; //stop the function from running when they are not moused down
+  console.log(e);
+  ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`; // using the HSL website 
+  //start from
+  // changing line width
+  ctx.beginPath();//ctx is where we do all drawing for our canvas
+  //go to
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(e.offsetX, e.offsetY); //the offset are coming from the actual events happening
+  
+  ctx.stroke();
+  lastX = e.offsetX;
+  lastY = e.offsetY;
+  
+  hue++; //increments colour with each stroke
+  if(hue >= 360) {
+    hue = 0;
+  }
+  if (ctx.lineWidth >= 150 || ctx.lineWidth <= 1) { 
+
+    // if its greater than a 100 flip direction, and if less than 1 flip the direction
+    direction = !direction;
+  }
+  if(direction) {
+    ctx.lineWidth++; 
+   }
+   else {
+    ctx.lineWidth--;  // decrements the line width
+   }
+  
+
+}
+// setting of variables
+canvas.addEventListener('mousedown', (e) => {
+  isDrawing = true;
+  // as soon as the person clicks on mousedown to start it, before we do a mousedown, we are gonna update the last x and last y so it will put that where we wanna go instead of just continuing from old line
+  [lastX, lastY] = [e.offsetX, e.offsetY];
+
+});
+
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', () => isDrawing = false);
+canvas.addEventListener('mouseout', () => isDrawing = false); // when mouse leaves the window
+
 </script>
+
 
 <style>
   html, body {
