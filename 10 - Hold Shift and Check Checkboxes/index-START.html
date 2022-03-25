@@ -96,6 +96,52 @@
   </div>
 
 <script>
+
+  // 1. select every single one of the checkboxes, we need to listen when they get checked
+  const checkboxes = document.querySelectorAll('.inbox input[type="checkbox"]');
+  
+    // 4. to do the multiple selelctions: when you check the first one, need to put into a variable. bc when youre checking the second one and youre holding down shift, we need to know what the last checked item was
+let lastChecked; // used let bc its gonna be reassigned constantly
+  
+  // 3. create the handlecheck function that is passed into #2
+  function handleCheck(e) {
+    //5. check if they had the shift key down
+    //AND check that they are checking it
+    // 6. create a var called inbetween -  where to start the area which we wish to check. when we hit our last one, inbetween will be false
+    let inBetween = false
+
+    if(e.shiftKey && this.checked) {
+      //7. loop over every single checkbox to see which ones are checked and run til it finds the last one 
+      checkboxes.forEach(checkbox => {
+        console.log(checkbox);
+        if(checkbox === this || checkbox === lastChecked) { // "this" refers to the checkbox first being checked
+        // works both up and down bc of ===
+          inBetween = !inBetween; //normally inBetween = true, but in this case inBetween is set as the opposite of itself. this way, setting the aforementioned inBetween variable to true
+          // inBetween is a "flag variable" that is set. once we hit the first one, it is going to be true (let inBetween=false) then programmatically set it in JS, and do it for every single one where the flag var inBetween will eb set to false. 
+          console.log('starting to check in between');
+        }
+        if(inBetween) { 
+          checkbox.checked = true;
+        }
+      });
+     
+    }
+    
+    lastChecked = this;
+  }
+
+    //2. listen to when one gets clicked or changed and loop over each one (foreach)
+
+  checkboxes.forEach(checkbox => checkbox.addEventListener('click', handleCheck));
+
+
+
+
+
+
+
+
+
 </script>
 </body>
 </html>
