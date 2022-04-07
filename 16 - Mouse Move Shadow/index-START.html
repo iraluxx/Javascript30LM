@@ -35,6 +35,42 @@
   </style>
 
 <script>
+
+  const hero = document.querySelector('.hero');
+  const text = hero.querySelector('h1'); //text inside of hero
+  const walk = 100; // 100px
+
+  function shadow(e) { // passes the event
+    // get width and height of thing we hover over
+    const width = hero.offsetWidth;
+    const height = hero.offsetHeight;
+    //where the cursor is
+    let { offsetX: x, offsetY: y } = e; // to get the position where the cursor is
+
+    if (this !== e.target) { // use math to find where things are inside the cursor
+
+      x = x + e.target.offsetLeft;
+      y = y + e.target.offsetTop;
+    }
+
+    const xWalk = Math.round((x / width * walk) - (walk / 2)); //if 100 is as high as it will go, 0 is not the lowest. 50 is the highest. "walk" is the distance of the shadow from the text
+    const yWalk = Math.round((y / width * walk) - (walk / 2));
+
+    text.style.textShadow = `
+    
+      ${xWalk}px ${yWalk}px 0 red,
+      ${xWalk * -1}px ${yWalk}px 0 rgba(0,255,255,0.7),
+      ${yWalk}px ${xWalk * -1}px 0 rgba(0,255,0,0.7),
+      ${yWalk * -1}px ${xWalk}px 0 rgba(0,0,255,0.7)
+    `;
+
+
+
+  }
+
+  hero.addEventListener('mousemove', shadow);
+
+
 </script>
 </body>
 </html>
