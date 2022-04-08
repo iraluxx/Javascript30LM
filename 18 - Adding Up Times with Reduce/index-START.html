@@ -182,6 +182,39 @@
     </li>
   </ul>
 <script>
+
+  // pull the numbers out of the dom, convert them to numbers, make them into seconds and minutes, add it all up, figure out how amny hours minutes and seconds there are, finally console.log the value
+
+  // use REDUCE and math, then just one single reduce
+
+  const timeNodes = Array.from(document.querySelectorAll('[data-time]'));
+
+  // produces a NodeList. NOT an array. need to turn this into an array of actual timestrings
+
+  // convert from nodelist to array with array.from
+
+  const seconds = timeNodes
+    .map(node => node.dataset.time)
+    // turn it into just seconds
+    .map(timeCode => {
+      const [mins, secs] = timeCode.split(':').map(parseFloat);
+      return (mins * 60) + secs;
+     })
+
+    .reduce((total, vidSeconds) => total + vidSeconds);
+
+    let secondsLeft = seconds;
+    const hours = Math.floor(secondsLeft / 3600);
+    secondsLeft = secondsLeft % 3600; // how many seconds are left after theyve been evenly distributed
+    const mins = Math.floor(secondsLeft / 60);
+    secondsLeft = secondsLeft % 60;
+
+
+    console.log(hours, mins, secondsLeft);
+
+  
+
+  
 </script>
 </body>
 </html>
