@@ -144,7 +144,9 @@
 
   .trigger-enter .dropdown {
     display: block;
-  }
+  } 
+  
+  /* two separate classes when something enters or leaves and use css to stage the moves*/
 
   .trigger-enter-active .dropdown {
     opacity: 1;
@@ -220,6 +222,46 @@
 </style>
 
 <script>
+  const triggers = document.querySelectorAll('.cool > li');
+  const background = document.querySelector('.dropdownBackground');
+  const nav = document.querySelector('.top');
+
+  // listen for hover in and hover out, mouse enter and mouse leave
+
+  function handleEnter() {
+    this.classList.add('trigger-enter'); //this is the list item
+    setTimeout(() => this.classList.contains('trigger-enter') && this.classList.add('trigger-enter-active'), 150);
+   // after a 100 miliseconds
+    // get the white bg on the page. // smooth transitions, words dont appear out of sync
+    background.classList.add('open');
+
+    const dropdown = this.querySelector('.dropdown');
+    // take the coordinates from the dropdown
+    const dropdownCoords = dropdown.getBoundingClientRect(); // find where the actual item is
+    const navCoords = nav.getBoundingClientRect();
+
+    const coords = {
+      height: dropdownCoords.height,
+      width: dropdownCoords.width,
+      top: dropdownCoords.top - navCoords.top,
+      left: dropdownCoords.left - navCoords.left,
+    };
+    background.style.setProperty('width', `${coords.width}px`);
+    background.style.setProperty('height', `${coords.height}px`); // when you hover, it will know how big and how wide. this is why its two step trigger active and trigger enter. needs to be on the page even if its visibly not there. 
+    background.style.setProperty('transform', `translate(${coords.left}px, ${coords.top}px)`); 
+  }
+
+  function handleLeave() {
+    this.classList.remove('trigger-enter', 'trigger-enter-active');
+    background.classList.remove('open');
+
+  }
+
+  triggers.forEach(trigger => trigger.addEventListener('mouseenter', handleEnter));
+  triggers.forEach(trigger => trigger.addEventListener('mouseleave', handleLeave));
+
+
+
 </script>
 
 </body>
