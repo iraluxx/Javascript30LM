@@ -35,6 +35,44 @@
   const options = document.querySelectorAll('[type="range"], [name="text"]');
   const speakButton = document.querySelector('#speak');
   const stopButton = document.querySelector('#stop');
+  msg.text = document.querySelector('[name="text"]').value;
+
+  function populateVoices() {
+    voices = this.getVoices();
+    voicesDropdown.innerHTML = voices
+      .filter(voice => voice.lang.includes('en')) //just english voices
+      .map(voice => `<option value="${voice.name}">${voice.name} (${voice.lang})</option>`)
+      .join('');
+  }
+  
+  function setVoice() {
+    msg.voice = voices.find(voice => voice.name === this.value);
+  }
+
+  function toggle(startOver = true) {
+    speechSynthesis.cancel(); // stops is from speaking and restarts even if its in the middle of reading it aloud 
+    if(startOver) {
+      speechSynthesis.speak(msg);
+    }
+    
+  } 
+
+  function setOption() {
+    console.log(this.name, this.value);
+    msg[this.name] = this.value;
+    toggle();
+  }
+  speechSynthesis.addEventListener('voiceschanged', populateVoices);
+  voicesDropdown.addEventListener('change', setVoice);
+// rate and pitch
+
+options.forEach(option => option.addEventListener('change', setOption));
+
+//listen for click
+
+speakButton.addEventListener('click', toggle);
+stopButton.addEventListener('click', toggle.bind(null, false)); //bind takes a function and takes it in the context of null and takes false?
+  
 </script>
 
 </body>
