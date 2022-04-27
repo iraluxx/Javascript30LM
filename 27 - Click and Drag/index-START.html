@@ -35,6 +35,48 @@
   </div>
 
 <script>
+  // when you first click down, add class of active. when you move mouse to left or right, it should move the div the same amount of pixels. anchor it down as soon as you click.
+
+  //combi of mousedown moseleave mouseout
+
+  const slider = document.querySelector('.items');
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+
+  // add a bunch of listerniers
+
+  slider.addEventListener('mousedown', (e) => {
+    isDown = true;
+    slider.classList.add('active');
+    startX = e.pageX - slider.offsetLeft;
+    scrollLeft = slider.scrollLeft;
+    console.log(startX);
+  });
+  
+  slider.addEventListener('mouseleave', () => {
+    isDown = false;
+    slider.classList.remove('active');
+
+  });
+  slider.addEventListener('mouseup', () => {
+    isDown = false;
+    slider.classList.remove('active');
+
+  });
+
+  slider.addEventListener('mousemove', (e) => {
+    if(!isDown) return;  // stop function from running
+    console.count(isDown);
+    e.preventDefault();
+    const x = e.pageX - slider.offsetLeft;    
+    const walk = (x - startX) * 3; // how far have we deviated from initial point that was CLICKED
+    slider.scrollLeft = scrollLeft - walk;
+
+  });
+
+
+
 </script>
 
   </body>
